@@ -11,15 +11,29 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.projectfictionlog.R
+import com.example.projectfictionlog.screenOne.Fragment.ScreenOneFragment
+import com.example.projectfictionlog.screenTwo.Fragment.ScreenTwoFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var screenOne: ScreenOneFragment
+    private lateinit var screenTwo: ScreenTwoFragment
+
+
     private var REQUEST_PERMISSION_READ_AND_WRITE = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if(checkInternet()){
-            if(checkPermission()){
 
+        screenOne = ScreenOneFragment.newInstance()
+        screenTwo = ScreenTwoFragment.newInstance()
+
+        if(checkInternet()){
+            if(checkPermission()){ supportFragmentManager.beginTransaction()
+                    .replace(R.id.frameMain, screenOne)
+                    .commit()
+            navMain.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
 
 
@@ -33,6 +47,23 @@ class MainActivity : AppCompatActivity() {
                 finishAffinity()
             }, 2000)
         }
+    }
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.one -> {
+                supportFragmentManager.beginTransaction().replace(R.id.frameMain, screenOne)
+                    .addToBackStack(null)
+                    .commit()
+            }
+            R.id.two -> {
+                supportFragmentManager.beginTransaction().replace(R.id.frameMain, screenTwo)
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+        }
+        true
     }
 
 
